@@ -55,3 +55,5 @@ class Result<T, B extends boolean> {
         return this.data;
     }
 }
+
+export default Result;
