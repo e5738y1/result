@@ -1,12 +1,19 @@
 {
+  "type": "module",
   "name": "result",
   "version": "1.0.0",
-  "description": "handle errors not breaking control flow of your program",
-  "main": "result.js",
+  "description": "Handle errors in place not breaking control flow of your program",
+  "main": "dist/result.js",
+  "types": "dist/result.d.ts",
+  "files": ["/dist"],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.6.2"
+  }
 }
