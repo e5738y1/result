@@ -1,5 +1,5 @@
-type Callback = (...args: any[]) => any;
-type AsyncCallback = (...args: any[]) => Promise<any>;
+type Callback<A extends any[], R> = (...args: A) => R;
+type AsyncCallback<A extends any[], R> = (...args: A) => Promise<R>;
 
 /** 
  * Purpose of this class is to provide a way to handle errors in-place instead of in try-catch block.
@@ -28,9 +28,9 @@ class Result<T, B extends boolean> {
      * Execute function and wrap its result in {@link Result} catching errors. 
      * Use {@link wrapAsync} for wrapping async functions.
     */
-    static wrap<C extends Callback>(callback: C, ...args: Parameters<C>) {
+    static wrap<A extends any[], R>(callback: Callback<A, R>, ...args: A) {
         try {
-            return Result.success(callback(...args) as ReturnType<C>);
+            return Result.success(callback(...args));
         }
         catch (error) {
             return Result.error(error);
@@ -38,9 +38,9 @@ class Result<T, B extends boolean> {
     }
 
     /** Execute async function and wrap its result in {@link Result} catching errors. */
-    static async wrapAsync<C extends AsyncCallback>(callback: C, ...args: Parameters<C>) {
+    static async wrapAsync<A extends any[], R>(callback: AsyncCallback<A, R>, ...args: A) {
         try {
-            return Result.success(await callback(...args) as ReturnType<C>);
+            return Result.success(await callback(...args));
         }
         catch (error) {
             return Result.error(error);
