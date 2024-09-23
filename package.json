@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "typedoc result.ts && tsc"
+    "build": "typedoc --excludeNotDocumented result.ts && tsc"
   },
   "keywords": [],
   "author": "",
