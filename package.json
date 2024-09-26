@@ -10,13 +10,12 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "typedoc --excludeNotDocumented result.ts && tsc"
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "typedoc": "^0.26.7",
     "typescript": "^5.6.2"
   }
 }

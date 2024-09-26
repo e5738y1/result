@@ -5,16 +5,18 @@ type Callback<A extends any[], R> = (...args: A) => R;
  * async function signUp(username, password) {
  *     password = await hash(password);
  *     // use Result.catchAsync when you expect errors in async functions, don't forget to await
- *     const { data } = await Result.catchAsync(database.users.insert, { username, password });
- *     // if callback throws, data is guaranteed to be instance of Error
- *     if (data instanceof Error) {
+ *     const { data, error } = await Result.catchAsync(database.users.insert, { username, password });
+ *     // if callback throws, data will be undefined, meanwhile error will be instance of error
+ *     // thrown values that aren't instance of error will be wrapped in error, original thrown value can be seen in error.cause
+ *     if (error) {
  *         // narrowing error type to what you expect
- *         if (data instanceof DatabaseError && data.code === 111) {
- *             // return Result instance created using Result.error to not Result.wrap it later
+ *         if (error instanceof DatabaseError && data.code === 111) {
+ *             // return Result instance created using Result.error to not Result.catch it later
  *             return Result.error(new SignUpError("User Already Exists"));
  *         }
  *         else {
- *             // this error is not expected, throw it
+ *             // you decide what to do if error is not expected
+ *             // if you want to crash application or handle error somewhere on higher levels just throw it
  *             throw data;
  *         }
  *     }
@@ -27,13 +29,14 @@ type Callback<A extends any[], R> = (...args: A) => R;
  * // not only can you handle possible errors, you can right away get data if successful or throw an error otherwise, using Result.unwrap
  * const user = signUpResult.unwrap();
 */
-declare class Result<T> {
+declare class Result<T, E extends Error | undefined> {
     data: T;
+    error: E;
     private constructor();
-    static error(error: Error): Result<Error>;
-    static success<T>(data: T): Result<T>;
-    static catch<A extends any[], R>(callback: Callback<A, R>, ...args: A): Result<Error> | Result<R>;
-    static catchAsync<A extends any[], R>(callback: Callback<A, R>, ...args: A): Promise<Result<Error> | Result<Awaited<R>>>;
+    static error(error: Error): Result<undefined, Error>;
+    static success<T>(data: T): Result<T, undefined>;
+    static catch<A extends any[], R>(callback: Callback<A, R>, ...args: A): Result<undefined, Error> | Result<R, undefined>;
+    static catchAsync<A extends any[], R>(callback: Callback<A, R>, ...args: A): Promise<Result<undefined, Error> | Result<Awaited<R>, undefined>>;
     unwrap(): T;
 }
 export { Callback };
